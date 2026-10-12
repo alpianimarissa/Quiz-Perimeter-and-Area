@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area & Perimeter Adventure - Grade 5 IB Math</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4;
+        }
+        h1, h2, h3, .font-fredoka {
+            font-family: 'Fredoka', cursive;
+        }
+        .bounce-hover:hover {
+            transform: translateY(-3px) scale(1.01);
+            transition: all 0.2s ease;
+        }
+        .shape-preview-bg {
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #34d399;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-20">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-4 border-emerald-400 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-emerald-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md transform -rotate-3">
+                    📐
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-extrabold text-emerald-600 leading-tight">Geometry Explorer</h1>
+                    <p class="text-xs text-slate-500 font-semibold">Grade 5 IB PYP Mathematics • Area & Perimeter</p>
+                </div>
+            </div>
+            <!-- Star Score Counter -->
+            <div class="flex items-center gap-2 bg-amber-100 border-2 border-amber-300 px-4 py-1.5 rounded-full shadow-inner">
+                <span class="text-2xl">⭐</span>
+                <span id="star-count" class="font-fredoka text-xl text-amber-700">0</span>
+                <span class="text-xs text-amber-600 font-bold hidden sm:inline">Stars</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-6">
+        
+        <nav class="flex flex-wrap gap-2 mb-8 justify-center">
+            <button onclick="switchTab('tujuan')" id="tab-tujuan" class="tab-btn bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-2xl shadow-md transition-all flex items-center gap-2">
+                🎯 <span>Learning Goals</span>
+            </button>
+            <button onclick="switchTab('warmup')" id="tab-warmup" class="tab-btn bg-white hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl border-2 border-slate-200 transition-all flex items-center gap-2">
+                🔥 <span>Warm-Up (4 Qs)</span>
+            </button>
+            <button onclick="switchTab('koneksi')" id="tab-koneksi" class="tab-btn bg-white hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl border-2 border-slate-200 transition-all flex items-center gap-2">
+                🌍 <span>Real-World Connection</span>
+            </button>
+            <button onclick="switchTab('materi')" id="tab-materi" class="tab-btn bg-white hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl border-2 border-slate-200 transition-all flex items-center gap-2">
+                💡 <span>Comprehensive Lesson & Lab</span>
+            </button>
+            <button onclick="switchTab('latihan')" id="tab-latihan" class="tab-btn bg-white hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl border-2 border-slate-200 transition-all flex items-center gap-2">
+                ✏️ <span>Guided Practice</span>
+            </button>
+        </nav>
+
+        <!-- TAB 1: LEARNING GOALS -->
+        <section id="content-tujuan" class="tab-content block">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-emerald-200 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-emerald-100 rounded-full opacity-50 pointer-events-none"></div>
+                
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-4xl">🚀</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-700">Your Mission Today, Young Mathematician!</h2>
+                </div>
+
+                <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                    Welcome to the wonderful world of 2D shapes! In Grade 5 IB, we inquire into how things are measured, structured, and applied in our physical environment. By the end of this interactive journey, you will master:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-2xl flex items-start gap-3 bounce-hover">
+                        <div class="bg-emerald-500 text-white rounded-xl w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+                        <div>
+                            <h3 class="font-bold text-emerald-800 text-lg">Perimeter vs. Area</h3>
+                            <p class="text-sm text-emerald-700">Understand the difference between the outer boundary (fence) and the interior space (carpet).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border-2 border-blue-200 p-4 rounded-2xl flex items-start gap-3 bounce-hover">
+                        <div class="bg-blue-500 text-white rounded-xl w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+                        <div>
+                            <h3 class="font-bold text-blue-800 text-lg">8 Essential 2D Shapes</h3>
+                            <p class="text-sm text-blue-700">Calculate formulas for Square, Rectangle, Triangle, Parallelogram, Trapezoid, Rhombus, Kite, and Circle.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl flex items-start gap-3 bounce-hover">
+                        <div class="bg-amber-500 text-white rounded-xl w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+                        <div>
+                            <h3 class="font-bold text-amber-800 text-lg">Real-World Application</h3>
+                            <p class="text-sm text-amber-700">Connect math formulas to architecture, design, sports fields, and everyday objects.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 border-2 border-purple-200 p-4 rounded-2xl flex items-start gap-3 bounce-hover">
+                        <div class="bg-purple-500 text-white rounded-xl w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+                        <div>
+                            <h3 class="font-bold text-purple-800 text-lg">Problem-Solving Inquiry</h3>
+                            <p class="text-sm text-purple-700">Tackle step-by-step word problems with interactive hints and guidance.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-emerald-500 text-white p-6 rounded-2xl text-center shadow-lg">
+                    <p class="font-fredoka text-xl mb-3">Ready to start exploring?</p>
+                    <button onclick="switchTab('warmup')" class="bg-amber-300 hover:bg-amber-200 text-amber-950 font-extrabold text-lg px-8 py-3 rounded-xl shadow-md transition-all bounce-hover">
+                        Let's Do Warm-Up! 🔥
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: WARM-UP -->
+        <section id="content-warmup" class="tab-content hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-amber-200 shadow-xl">
+                <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-4xl">🔥</span>
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-amber-600">Warm-Up Brain Boost!</h2>
+                            <p class="text-sm text-slate-500">4 Quick Questions to test your foundational skills</p>
+                        </div>
+                    </div>
+                    <span class="bg-amber-100 text-amber-700 font-bold px-3 py-1 rounded-full text-sm">
+                        Warm-Up Progress: <span id="warmup-progress">0</span>/4
+                    </span>
+                </div>
+
+                <!-- Concept Quick Card -->
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl mb-6 text-sm text-amber-900 grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div>📏 <strong>Perimeter:</strong> Total distance around the outer edge (add all side lengths).</div>
+                    <div>🟦 <strong>Area:</strong> Total square units that cover the flat inside surface.</div>
+                </div>
+
+                <!-- 4 Warmup Questions Container -->
+                <div id="warmup-questions-container" class="space-y-6">
+                    <!-- Dynamic rendering via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: REAL-WORLD CONNECTION -->
+        <section id="content-koneksi" class="tab-content hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-blue-200 shadow-xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-4xl">🌍</span>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-blue-600">Geometry All Around Us!</h2>
+                        <p class="text-sm text-slate-500">Inquiry into how shapes build our physical world</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <!-- Square -->
+                    <div class="bg-emerald-50 rounded-2xl p-4 border-2 border-emerald-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">🔲</div>
+                        <h3 class="text-lg font-bold text-emerald-800 text-center">Square</h3>
+                        <p class="text-xs text-center text-emerald-600 font-semibold mb-2">4 equal sides, 90° corners</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-emerald-100">
+                            <li>✨ Floor tiles & ceramics</li>
+                            <li>✨ Chessboard layout</li>
+                            <li>✨ Sticky notes</li>
+                        </ul>
+                    </div>
+
+                    <!-- Rectangle -->
+                    <div class="bg-blue-50 rounded-2xl p-4 border-2 border-blue-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">📱</div>
+                        <h3 class="text-lg font-bold text-blue-800 text-center">Rectangle</h3>
+                        <p class="text-xs text-center text-blue-600 font-semibold mb-2">Opposite sides equal</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-blue-100">
+                            <li>✨ Smartphone & TV screen</li>
+                            <li>✨ Classroom whiteboard</li>
+                            <li>✨ Swimming pool layout</li>
+                        </ul>
+                    </div>
+
+                    <!-- Triangle -->
+                    <div class="bg-amber-50 rounded-2xl p-4 border-2 border-amber-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">🍕</div>
+                        <h3 class="text-lg font-bold text-amber-800 text-center">Triangle</h3>
+                        <p class="text-xs text-center text-amber-600 font-semibold mb-2">3 sides and 3 angles</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-amber-100">
+                            <li>✨ Roof truss structures</li>
+                            <li>✨ Pizza slices & nachos</li>
+                            <li>✨ Warning road signs</li>
+                        </ul>
+                    </div>
+
+                    <!-- Parallelogram -->
+                    <div class="bg-purple-50 rounded-2xl p-4 border-2 border-purple-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">🏬</div>
+                        <h3 class="text-lg font-bold text-purple-800 text-center">Parallelogram</h3>
+                        <p class="text-xs text-center text-purple-600 font-semibold mb-2">Slanted opposite sides</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-purple-100">
+                            <li>✨ Modern architectural facades</li>
+                            <li>✨ Unique parking lot stalls</li>
+                            <li>✨ Cultural textile patterns</li>
+                        </ul>
+                    </div>
+
+                    <!-- Trapezoid -->
+                    <div class="bg-rose-50 rounded-2xl p-4 border-2 border-rose-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">👜</div>
+                        <h3 class="text-lg font-bold text-rose-800 text-center">Trapezoid</h3>
+                        <p class="text-xs text-center text-rose-600 font-semibold mb-2">One pair of parallel sides</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-rose-100">
+                            <li>✨ Handbag & purse designs</li>
+                            <li>✨ Bridges & beam supports</li>
+                            <li>✨ Lamp shade structures</li>
+                        </ul>
+                    </div>
+
+                    <!-- Rhombus -->
+                    <div class="bg-cyan-50 rounded-2xl p-4 border-2 border-cyan-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">💎</div>
+                        <h3 class="text-lg font-bold text-cyan-800 text-center">Rhombus</h3>
+                        <p class="text-xs text-center text-cyan-600 font-semibold mb-2">4 equal sides, slanted</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-cyan-100">
+                            <li>✨ Diamond gemstone cut</li>
+                            <li>✨ Baseball infield dirt shape</li>
+                            <li>✨ Window glass mosaics</li>
+                        </ul>
+                    </div>
+
+                    <!-- Kite -->
+                    <div class="bg-indigo-50 rounded-2xl p-4 border-2 border-indigo-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">🪁</div>
+                        <h3 class="text-lg font-bold text-indigo-800 text-center">Kite</h3>
+                        <p class="text-xs text-center text-indigo-600 font-semibold mb-2">2 pairs of adjacent sides</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-indigo-100">
+                            <li>✨ Flying park toys (kites)</li>
+                            <li>✨ Jewelry pendants</li>
+                            <li>✨ Decorative ceiling tiles</li>
+                        </ul>
+                    </div>
+
+                    <!-- Circle -->
+                    <div class="bg-teal-50 rounded-2xl p-4 border-2 border-teal-200 hover:shadow-lg transition-all">
+                        <div class="text-center text-4xl mb-2">⏰</div>
+                        <h3 class="text-lg font-bold text-teal-800 text-center">Circle</h3>
+                        <p class="text-xs text-center text-teal-600 font-semibold mb-2">Equidistant center point</p>
+                        <ul class="text-xs text-slate-700 space-y-1 bg-white p-2.5 rounded-xl border border-teal-100">
+                            <li>✨ Clocks & watches</li>
+                            <li>✨ Bicycles wheels & gears</li>
+                            <li>✨ Circular running tracks</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-blue-100 border-2 border-blue-300 p-4 rounded-2xl flex items-center gap-4">
+                    <span class="text-3xl">💡</span>
+                    <p class="text-sm text-blue-900 font-semibold">
+                        <strong>IB Connection:</strong> Understanding area allows interior designers to calculate how much flooring material or paint is needed for a room remodel!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: COMPREHENSIVE LESSON & INTERACTIVE LAB -->
+        <section id="content-materi" class="tab-content hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-purple-200 shadow-xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-4xl">💡</span>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-purple-700">Comprehensive Lesson & Interactive Lab</h2>
+                        <p class="text-sm text-slate-500">Select any shape below to view formulas, conceptual explanations, and drag/slider simulators!</p>
+                    </div>
+                </div>
+
+                <!-- Shape Selector Pills (All 8 Shapes) -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button onclick="selectShape('square')" id="btn-shape-square" class="shape-tab-btn bg-purple-600 text-white font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Square
+                    </button>
+                    <button onclick="selectShape('rectangle')" id="btn-shape-rectangle" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Rectangle
+                    </button>
+                    <button onclick="selectShape('triangle')" id="btn-shape-triangle" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Triangle
+                    </button>
+                    <button onclick="selectShape('parallelogram')" id="btn-shape-parallelogram" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Parallelogram
+                    </button>
+                    <button onclick="selectShape('trapezoid')" id="btn-shape-trapezoid" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Trapezoid
+                    </button>
+                    <button onclick="selectShape('rhombus')" id="btn-shape-rhombus" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Rhombus
+                    </button>
+                    <button onclick="selectShape('kite')" id="btn-shape-kite" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Kite
+                    </button>
+                    <button onclick="selectShape('circle')" id="btn-shape-circle" class="shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm">
+                        Circle
+                    </button>
+                </div>
+
+                <!-- Dynamic Shape Interactive Canvas & Formula Area -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-purple-50/50 p-4 md:p-6 rounded-2xl border border-purple-100">
+                    
+                    <!-- Left: Interactive Visualizer Canvas -->
+                    <div class="lg:col-span-6 flex flex-col justify-between bg-white p-4 rounded-2xl border-2 border-purple-200 shadow-inner">
+                        <div class="w-full flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-purple-600 bg-purple-100 px-2.5 py-1 rounded-md" id="shape-tag">Shape: Square</span>
+                            <span class="text-xs font-semibold text-slate-500">📏 Drag sliders to test</span>
+                        </div>
+
+                        <!-- SVG Visualization Container -->
+                        <div class="w-full h-64 shape-preview-bg rounded-xl border border-slate-200 flex items-center justify-center p-2 relative overflow-hidden" id="svg-container">
+                            <!-- SVG injected dynamically -->
+                        </div>
+
+                        <!-- Sliders Control -->
+                        <div class="w-full mt-4 space-y-3 bg-slate-50 p-3 rounded-xl border border-slate-200" id="controls-container">
+                            <!-- Slider Controls injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Formula Breakdown & Detailed Examples -->
+                    <div class="lg:col-span-6 flex flex-col justify-between space-y-4">
+                        <div class="bg-white p-5 rounded-2xl border-2 border-purple-200 shadow-sm space-y-3">
+                            <h3 class="text-xl font-bold text-purple-800 flex items-center gap-2">
+                                <span>📐</span> <span id="materi-title">Square Formulas</span>
+                            </h3>
+
+                            <!-- Formula Box -->
+                            <div class="bg-purple-600 text-white p-3.5 rounded-xl text-center shadow-md">
+                                <p class="text-xs text-purple-200 uppercase font-bold tracking-wider mb-1">Perimeter & Area</p>
+                                <p class="text-xl font-black font-fredoka" id="materi-formula">Area = s × s | Perimeter = 4 × s</p>
+                                <p class="text-xs text-purple-100 mt-1 font-mono" id="materi-formula-short">(A = s², P = 4s)</p>
+                            </div>
+
+                            <!-- Concept Explanation -->
+                            <div class="text-sm text-slate-700 leading-relaxed bg-amber-50 p-3 rounded-xl border border-amber-200" id="materi-explanation">
+                                <!-- Dynamic explanation -->
+                            </div>
+                        </div>
+
+                        <!-- Example Calculation Card -->
+                        <div class="bg-white p-5 rounded-2xl border-2 border-emerald-200 shadow-sm space-y-2">
+                            <h4 class="font-extrabold text-emerald-700 text-sm uppercase tracking-wide flex items-center gap-1">
+                                📝 Worked Example & Calculation:
+                            </h4>
+                            <div class="text-sm space-y-1 text-slate-700 font-mono bg-emerald-50 p-3 rounded-xl border border-emerald-100" id="materi-example">
+                                <!-- Dynamic Example -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 5: GUIDED PRACTICE -->
+        <section id="content-latihan" class="tab-content hidden">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-emerald-200 shadow-xl">
+                <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-4xl">✏️</span>
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-emerald-700">Guided Practice (8 IB Questions)</h2>
+                            <p class="text-sm text-slate-500">Test your mastery with step-by-step hints and instant feedback!</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-500 font-bold block">Quiz Score</span>
+                        <span id="quiz-score" class="text-xl font-black text-emerald-600">0 / 80</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Progress Bar -->
+                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-6 border border-slate-200">
+                    <div id="quiz-progress-bar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+                </div>
+
+                <!-- Quiz Card Container -->
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Dynamic Question content -->
+                </div>
+
+                <!-- Navigation buttons for quiz -->
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
+                    <button id="btn-prev-quiz" onclick="navigateQuiz(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl text-sm transition-all disabled:opacity-40" disabled>
+                        ⬅️ Previous Question
+                    </button>
+                    <span class="text-xs font-bold text-slate-500" id="quiz-step-indicator">Question 1 of 8</span>
+                    <button id="btn-next-quiz" onclick="navigateQuiz(1)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition-all shadow-md">
+                        Next Question ➡️
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                }
+            } catch (e) {
+                console.log("Audio not allowed or supported");
+            }
+        }
+
+        // Global state variables
+        let totalStars = 0;
+        let warmupAnswered = 0;
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let userAnswers = {};
+        let warmupUserAnswers = {};
+
+        function addStars(num) {
+            totalStars += num;
+            document.getElementById('star-count').innerText = totalStars;
+            const el = document.getElementById('star-count');
+            el.classList.add('scale-125', 'text-amber-500');
+            setTimeout(() => el.classList.remove('scale-125', 'text-amber-500'), 300);
+        }
+
+        function switchTab(tabId) {
+            playSound('click');
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = 'tab-btn bg-white hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl border-2 border-slate-200 transition-all flex items-center gap-2';
+            });
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.className = 'tab-btn bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-2xl shadow-md transition-all flex items-center gap-2';
+        }
+
+        const warmupData = [
+            {
+                id: 1,
+                title: "Perimeter of a Playground Square",
+                question: "A sandbox in the school playground is shaped like a square with a side length of <b>12 m</b>. What is its PERIMETER?",
+                hint: "Perimeter is the total distance around the outside edge (4 × side).",
+                options: ["24 m", "36 m", "48 m", "144 m"],
+                correct: 2, // 48 m
+                explanation: "Perimeter = 4 × side = 4 × 12 m = 48 m."
+            },
+            {
+                id: 2,
+                title: "Area of a Classroom Rug",
+                question: "A rectangular reading rug has a length of <b>9 m</b> and a width of <b>5 m</b>. What is its AREA?",
+                hint: "Area of rectangle = Length × Width (9 × 5).",
+                options: ["28 m²", "45 m²", "14 m²", "50 m²"],
+                correct: 1, // 45 m²
+                explanation: "Area = Length × Width = 9 m × 5 m = 45 m²."
+            },
+            {
+                id: 3,
+                title: "Perimeter vs. Area Concept",
+                question: "Mr. Davis wants to put a decorative wooden fence around his rectangular vegetable garden. Which mathematical concept does he need?",
+                hint: "Fencing goes around the outer boundary of the garden.",
+                options: ["Area", "Perimeter", "Volume", "Diameter"],
+                correct: 1,
+                explanation: "Fencing is placed along the outer edge, which is measured by Perimeter!"
+            },
+            {
+                id: 4,
+                title: "Area of a Square Window",
+                question: "A square glass window has a side length of <b>7 cm</b>. What is its AREA?",
+                hint: "Area of square = side × side (7 × 7).",
+                options: ["14 cm²", "28 cm²", "49 cm²", "56 cm²"],
+                correct: 2, // 49 cm²
+                explanation: "Area = side × side = 7 cm × 7 cm = 49 cm²."
+            }
+        ];
+
+        function renderWarmup() {
+            const container = document.getElementById('warmup-questions-container');
+            container.innerHTML = '';
+
+            warmupData.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-amber-50/60 p-4 md:p-5 rounded-2xl border-2 border-amber-200 transition-all";
+                card.id = `warmup-card-${q.id}`;
+                
+                const isAnswered = warmupUserAnswers[q.id] !== undefined;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="bg-amber-200 text-amber-800 font-bold px-3 py-0.5 rounded-full text-xs">
+                            Warm-Up #${idx + 1}: ${q.title}
+                        </span>
+                        <span id="warmup-badge-${q.id}" class="text-xs font-bold ${isAnswered ? (warmupUserAnswers[q.id] === q.correct ? 'text-emerald-600' : 'text-rose-500') : 'text-slate-400'}">
+                            ${isAnswered ? (warmupUserAnswers[q.id] === q.correct ? '✅ Correct' : '❌ Incorrect') : 'Not Answered'}
+                        </span>
+                    </div>
+                    <p class="text-base font-bold text-slate-800 mb-3">${q.question}</p>
+
+                    <!-- Options Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                        ${q.options.map((opt, oIdx) => {
+                            let btnClass = "bg-white hover:bg-amber-100 text-slate-700 font-bold p-2.5 rounded-xl border border-slate-200 text-left text-sm transition-all flex items-center justify-between";
+                            if (isAnswered) {
+                                if (oIdx === q.correct) btnClass = "bg-emerald-500 text-white font-bold p-2.5 rounded-xl border border-emerald-600 text-left text-sm flex items-center justify-between";
+                                else if (oIdx === warmupUserAnswers[q.id]) btnClass = "bg-rose-400 text-white font-bold p-2.5 rounded-xl border border-rose-500 text-left text-sm flex items-center justify-between";
+                                else btnClass = "bg-slate-100 text-slate-400 font-bold p-2.5 rounded-xl border border-slate-200 text-left text-sm flex items-center justify-between opacity-60";
+                            }
+                            return `
+                                <button onclick="checkWarmup(${q.id}, ${oIdx})" id="warmup-btn-${q.id}-${oIdx}" class="${btnClass}" ${isAnswered ? 'disabled' : ''}>
+                                    <span>${opt}</span>
+                                    <span>${isAnswered && oIdx === q.correct ? '✨' : ''}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- Feedback & Explanation Area -->
+                    <div id="warmup-feedback-${q.id}" class="p-3 rounded-xl text-xs font-bold mt-2 ${isAnswered ? (warmupUserAnswers[q.id] === q.correct ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-rose-100 text-rose-800 border border-rose-300') : 'hidden'}">
+                        ${isAnswered ? (warmupUserAnswers[q.id] === q.correct ? `🎉 <strong>Awesome! Correct.</strong> ${q.explanation}` : `❌ <strong>Not quite.</strong> Correct answer: ${q.options[q.correct]}. ${q.explanation}`) : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            document.getElementById('warmup-progress').innerText = Object.keys(warmupUserAnswers).length;
+        }
+
+        function checkWarmup(qId, selectedIdx) {
+            if (warmupUserAnswers[qId] !== undefined) return; // already answered
+            warmupUserAnswers[qId] = selectedIdx;
+
+            const q = warmupData.find(item => item.id === qId);
+            const feedbackEl = document.getElementById(`warmup-feedback-${qId}`);
+            const badgeEl = document.getElementById(`warmup-badge-${qId}`);
+            const buttons = document.querySelectorAll(`[id^="warmup-btn-${qId}-"]`);
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === q.correct) {
+                playSound('correct');
+                addStars(5);
+                document.getElementById(`warmup-btn-${qId}-${selectedIdx}`).className = "bg-emerald-500 text-white font-bold p-2.5 rounded-xl border border-emerald-600 text-left text-sm flex items-center justify-between";
+                feedbackEl.className = "p-3 rounded-xl text-xs font-bold mt-2 bg-emerald-100 text-emerald-800 border border-emerald-300";
+                feedbackEl.innerHTML = `🎉 <strong>Awesome! Correct.</strong> ${q.explanation}`;
+                badgeEl.innerHTML = "✅ Correct (+5 ⭐)";
+                badgeEl.className = "text-xs font-bold text-emerald-600";
+            } else {
+                playSound('wrong');
+                document.getElementById(`warmup-btn-${qId}-${selectedIdx}`).className = "bg-rose-400 text-white font-bold p-2.5 rounded-xl border border-rose-500 text-left text-sm flex items-center justify-between";
+                document.getElementById(`warmup-btn-${qId}-${q.correct}`).className = "bg-emerald-500 text-white font-bold p-2.5 rounded-xl border border-emerald-600 text-left text-sm flex items-center justify-between";
+                feedbackEl.className = "p-3 rounded-xl text-xs font-bold mt-2 bg-rose-100 text-rose-800 border border-rose-300";
+                feedbackEl.innerHTML = `❌ <strong>Not quite.</strong> Correct answer: ${q.options[q.correct]}. <br>${q.explanation}`;
+                badgeEl.innerHTML = "❌ Incorrect";
+                badgeEl.className = "text-xs font-bold text-rose-500";
+            }
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('warmup-progress').innerText = Object.keys(warmupUserAnswers).length;
+        }
+
+        const shapesData = {
+            square: {
+                title: "Square Formulas",
+                formula: "Area = s × s | Perimeter = 4 × s",
+                formulaShort: "(A = s², P = 4s)",
+                explanation: "A square has <b>4 equal sides</b> and 4 right angles (90°). Area measures the interior grid squares, while perimeter measures the total distance around all 4 sides.",
+                sliders: [
+                    { id: 'sisi', label: 'Side Length (s)', min: 2, max: 10, val: 5, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const s = vals.sisi;
+                    return {
+                        area: s * s,
+                        perimeter: 4 * s,
+                        exampleText: `Given side (s) = ${s} cm<br>Area = s × s = ${s} × ${s} = <strong>${s*s} cm²</strong><br>Perimeter = 4 × s = 4 × ${s} = <strong>${4*s} cm</strong>`
+                    };
+                },
+                draw: (vals) => {
+                    const s = vals.sisi;
+                    const scale = 18;
+                    const size = s * scale;
+                    const x = (240 - size) / 2;
+                    const y = (220 - size) / 2;
+
+                    let gridLines = '';
+                    for (let i = 0; i <= s; i++) {
+                        gridLines += `<line x1="${x + i*scale}" y1="${y}" x2="${x + i*scale}" y2="${y + size}" stroke="#3b82f6" stroke-opacity="0.3" stroke-dasharray="2,2"/>`;
+                        gridLines += `<line x1="${x}" y1="${y + i*scale}" x2="${x + size}" y2="${y + i*scale}" stroke="#3b82f6" stroke-opacity="0.3" stroke-dasharray="2,2"/>`;
+                    }
+
+                    return `
+                        <rect x="${x}" y="${y}" width="${size}" height="${size}" fill="#93c5fd" fill-opacity="0.6" stroke="#2563eb" stroke-width="3" rx="4"/>
+                        ${gridLines}
+                        <text x="${x + size/2}" y="${y - 8}" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="13">s = ${s} cm</text>
+                        <text x="${x - 14}" y="${y + size/2}" text-anchor="middle" font-weight="bold" fill="#1e40af" font-size="13" transform="rotate(-90 ${x-14} ${y+size/2})">s = ${s} cm</text>
+                    `;
+                }
+            },
+            rectangle: {
+                title: "Rectangle Formulas",
+                formula: "Area = length × width | Perimeter = 2 × (l + w)",
+                formulaShort: "(A = l × w, P = 2l + 2w)",
+                explanation: "A rectangle has <b>opposite sides equal in length</b> and 4 right angles. Area is length times width; perimeter is the sum of all 4 outer sides.",
+                sliders: [
+                    { id: 'panjang', label: 'Length (l)', min: 3, max: 11, val: 8, unit: 'cm' },
+                    { id: 'lebar', label: 'Width (w)', min: 2, max: 8, val: 4, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const l = vals.panjang;
+                    const w = vals.lebar;
+                    return {
+                        area: l * w,
+                        perimeter: 2 * (l + w),
+                        exampleText: `Given l = ${l} cm, w = ${w} cm<br>Area = l × w = ${l} × ${w} = <strong>${l*w} cm²</strong><br>Perimeter = 2 × (${l} + ${w}) = <strong>${2*(l+w)} cm</strong>`
+                    };
+                },
+                draw: (vals) => {
+                    const l = vals.panjang;
+                    const w = vals.lebar;
+                    const scale = 16;
+                    const widthPx = l * scale;
+                    const heightPx = w * scale;
+                    const x = (240 - widthPx) / 2;
+                    const y = (220 - heightPx) / 2;
+
+                    let gridLines = '';
+                    for (let i = 0; i <= l; i++) {
+                        gridLines += `<line x1="${x + i*scale}" y1="${y}" x2="${x + i*scale}" y2="${y + heightPx}" stroke="#10b981" stroke-opacity="0.3" stroke-dasharray="2,2"/>`;
+                    }
+                    for (let j = 0; j <= w; j++) {
+                        gridLines += `<line x1="${x}" y1="${y + j*scale}" x2="${x + widthPx}" y2="${y + j*scale}" stroke="#10b981" stroke-opacity="0.3" stroke-dasharray="2,2"/>`;
+                    }
+
+                    return `
+                        <rect x="${x}" y="${y}" width="${widthPx}" height="${heightPx}" fill="#a7f3d0" fill-opacity="0.6" stroke="#059669" stroke-width="3" rx="4"/>
+                        ${gridLines}
+                        <text x="${x + widthPx/2}" y="${y - 8}" text-anchor="middle" font-weight="bold" fill="#065f46" font-size="13">l = ${l} cm</text>
+                        <text x="${x - 14}" y="${y + heightPx/2}" text-anchor="middle" font-weight="bold" fill="#065f46" font-size="13" transform="rotate(-90 ${x-14} ${y+heightPx/2})">w = ${w} cm</text>
+                    `;
+                }
+            },
+            triangle: {
+                title: "Triangle Formulas",
+                formula: "Area = (base × height) ÷ 2 | Perimeter = a + b + c",
+                formulaShort: "(A = ½bh, P = a+b+c)",
+                explanation: "A triangle is <b>half of a parallelogram</b>. Its area is calculated by multiplying base by height and dividing by 2. Perimeter is the sum of all 3 outer sides.",
+                sliders: [
+                    { id: 'alas', label: 'Base (b)', min: 4, max: 10, val: 7, unit: 'cm' },
+                    { id: 'tinggi', label: 'Height (h)', min: 3, max: 8, val: 5, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const b = vals.alas;
+                    const h = vals.tinggi;
+                    const approxSide = Math.round(Math.sqrt((b/2)*(b/2) + h*h) * 2);
+                    const approxPerimeter = b + approxSide;
+                    return {
+                        area: (b * h) / 2,
+                        perimeter: approxPerimeter,
+                        exampleText: `Given base (b) = ${b} cm, height (h) = ${h} cm<br>Area = (b × h) ÷ 2 = (${b} × ${h}) ÷ 2 = <strong>${(b*h)/2} cm²</strong><br>Perimeter ≈ sum of 3 outer sides (≈ ${approxPerimeter} cm)`
+                    };
+                },
+                draw: (vals) => {
+                    const b = vals.alas;
+                    const h = vals.tinggi;
+                    const scale = 18;
+                    const w = b * scale;
+                    const ht = h * scale;
+                    const x = (240 - w) / 2;
+                    const y = (220 - ht) / 2 + ht;
+
+                    const p1 = `${x},${y}`;
+                    const p2 = `${x + w},${y}`;
+                    const p3 = `${x + w/2},${y - ht}`;
+
+                    return `
+                        <polygon points="${p1} ${p2} ${p3}" fill="#fde68a" fill-opacity="0.7" stroke="#d97706" stroke-width="3"/>
+                        <line x1="${x + w/2}" y1="${y}" x2="${x + w/2}" y2="${y - ht}" stroke="#dc2626" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="${x + w/2}" y="${y + 18}" text-anchor="middle" font-weight="bold" fill="#b45309" font-size="13">b = ${b} cm</text>
+                        <text x="${x + w/2 + 10}" y="${y - ht/2}" font-weight="bold" fill="#dc2626" font-size="12">h = ${h} cm</text>
+                    `;
+                }
+            },
+            parallelogram: {
+                title: "Parallelogram Formulas",
+                formula: "Area = base × height | Perimeter = 2 × (a + b)",
+                formulaShort: "(A = b × h, P = 2(a + b))",
+                explanation: "A parallelogram has opposite parallel sides. If you cut a triangle from one end and shift it to the other, it forms a rectangle! Area = base × height.",
+                sliders: [
+                    { id: 'alas', label: 'Base (b)', min: 4, max: 10, val: 6, unit: 'cm' },
+                    { id: 'tinggi', label: 'Height (h)', min: 3, max: 8, val: 5, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const b = vals.alas;
+                    const h = vals.tinggi;
+                    return {
+                        area: b * h,
+                        perimeter: 2 * (b + 5),
+                        exampleText: `Given base = ${b} cm, height = ${h} cm<br>Area = base × height = ${b} × ${h} = <strong>${b*h} cm²</strong><br>Perimeter = 2 × (base + side)`
+                    };
+                },
+                draw: (vals) => {
+                    const b = vals.alas;
+                    const h = vals.tinggi;
+                    const scale = 16;
+                    const w = b * scale;
+                    const ht = h * scale;
+                    const offset = 28;
+                    const x = (240 - w - offset) / 2;
+                    const y = (220 - ht) / 2;
+
+                    const p1 = `${x + offset},${y}`;
+                    const p2 = `${x + offset + w},${y}`;
+                    const p3 = `${x + w},${y + ht}`;
+                    const p4 = `${x},${y + ht}`;
+
+                    return `
+                        <polygon points="${p1} ${p2} ${p3} ${p4}" fill="#e9d5ff" fill-opacity="0.7" stroke="#7e22ce" stroke-width="3"/>
+                        <line x1="${x + offset}" y1="${y}" x2="${x + offset}" y2="${y + ht}" stroke="#dc2626" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="${x + offset + w/2}" y="${y + ht + 18}" text-anchor="middle" font-weight="bold" fill="#6b21a8" font-size="13">base = ${b} cm</text>
+                        <text x="${x + offset - 12}" y="${y + ht/2}" font-weight="bold" fill="#dc2626" font-size="12">h = ${h} cm</text>
+                    `;
+                }
+            },
+            trapezoid: {
+                title: "Trapezoid Formulas",
+                formula: "Area = ((a + b) ÷ 2) × height | Perimeter = sum of 4 sides",
+                formulaShort: "(A = ½(a + b)h)",
+                explanation: "A trapezoid has one pair of parallel bases (a and b). To find the area, average the two bases and multiply by the height!",
+                sliders: [
+                    { id: 'base1', label: 'Top Base (a)', min: 3, max: 8, val: 5, unit: 'cm' },
+                    { id: 'base2', label: 'Bottom Base (b)', min: 6, max: 12, val: 9, unit: 'cm' },
+                    { id: 'tinggi', label: 'Height (h)', min: 3, max: 8, val: 4, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const a = vals.base1;
+                    const b = vals.base2;
+                    const h = vals.tinggi;
+                    const area = ((a + b) / 2) * h;
+                    return {
+                        area: area,
+                        exampleText: `Given top base (a) = ${a} cm, bottom base (b) = ${b} cm, height (h) = ${h} cm<br>Area = ((a + b) ÷ 2) × h<br>Area = ((${a} + ${b}) ÷ 2) × ${h} = (${(a+b)/2}) × ${h} = <strong>${area} cm²</strong>`
+                    };
+                },
+                draw: (vals) => {
+                    const a = vals.base1;
+                    const b = vals.base2;
+                    const h = vals.tinggi;
+                    const scale = 14;
+                    const w1 = a * scale;
+                    const w2 = b * scale;
+                    const ht = h * scale;
+                    const x = 120;
+                    const y = 110;
+
+                    const p1 = `${x - w1/2},${y - ht/2}`;
+                    const p2 = `${x + w1/2},${y - ht/2}`;
+                    const p3 = `${x + w2/2},${y + ht/2}`;
+                    const p4 = `${x - w2/2},${y + ht/2}`;
+
+                    return `
+                        <polygon points="${p1} ${p2} ${p3} ${p4}" fill="#fecdd3" fill-opacity="0.7" stroke="#e11d48" stroke-width="3"/>
+                        <line x1="${x}" y1="${y - ht/2}" x2="${x}" y2="${y + ht/2}" stroke="#dc2626" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="${x}" y="${y - ht/2 - 8}" text-anchor="middle" font-weight="bold" fill="#9f1239" font-size="12">a = ${a} cm</text>
+                        <text x="${x}" y="${y + ht/2 + 18}" text-anchor="middle" font-weight="bold" fill="#9f1239" font-size="12">b = ${b} cm</text>
+                        <text x="${x + 12}" y="${y}" font-weight="bold" fill="#dc2626" font-size="12">h = ${h} cm</text>
+                    `;
+                }
+            },
+            rhombus: {
+                title: "Rhombus Formulas",
+                formula: "Area = (d₁ × d₂) ÷ 2 | Perimeter = 4 × side",
+                formulaShort: "(A = ½d₁d₂)",
+                explanation: "A rhombus has 4 equal sides with slanted angles. Diagonals d₁ and d₂ cross perpendicularly in the center. Area = half of the product of diagonals.",
+                sliders: [
+                    { id: 'd1', label: 'Diagonal 1 (d₁)', min: 4, max: 10, val: 8, unit: 'cm' },
+                    { id: 'd2', label: 'Diagonal 2 (d₂)', min: 4, max: 10, val: 6, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const d1 = vals.d1;
+                    const d2 = vals.d2;
+                    const area = (d1 * d2) / 2;
+                    return {
+                        area: area,
+                        exampleText: `Given d₁ = ${d1} cm, d₂ = ${d2} cm<br>Area = (d₁ × d₂) ÷ 2<br>Area = (${d1} × ${d2}) ÷ 2 = ${d1*d2} ÷ 2 = <strong>${area} cm²</strong>`
+                    };
+                },
+                draw: (vals) => {
+                    const d1 = vals.d1;
+                    const d2 = vals.d2;
+                    const scale = 16;
+                    const w = d1 * scale;
+                    const h = d2 * scale;
+                    const cx = 120;
+                    const cy = 110;
+
+                    const pTop = `${cx},${cy - h/2}`;
+                    const pRight = `${cx + w/2},${cy}`;
+                    const pBottom = `${cx},${cy + h/2}`;
+                    const pLeft = `${cx - w/2},${cy}`;
+
+                    return `
+                        <polygon points="${pTop} ${pRight} ${pBottom} ${pLeft}" fill="#ccfbf1" fill-opacity="0.7" stroke="#0d9488" stroke-width="3"/>
+                        <line x1="${cx - w/2}" y1="${cy}" x2="${cx + w/2}" y2="${cy}" stroke="#0f766e" stroke-width="2" stroke-dasharray="3,3"/>
+                        <line x1="${cx}" y1="${cy - h/2}" x2="${cx}" y2="${cy + h/2}" stroke="#0f766e" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="${cx}" y="${cy - 6}" text-anchor="middle" font-weight="bold" fill="#115e59" font-size="12">d₁ = ${d1} cm</text>
+                        <text x="${cx + 8}" y="${cy + h/4}" font-weight="bold" fill="#115e59" font-size="12">d₂ = ${d2} cm</text>
+                    `;
+                }
+            },
+            kite: {
+                title: "Kite Formulas",
+                formula: "Area = (d₁ × d₂) ÷ 2 | Perimeter = 2 × (a + b)",
+                formulaShort: "(A = ½d₁d₂)",
+                explanation: "A kite has two pairs of adjacent equal-length sides. Just like the rhombus, its area is calculated using the perpendicular diagonals d₁ and d₂ divided by 2.",
+                sliders: [
+                    { id: 'd1', label: 'Vertical Diagonal (d₁)', min: 4, max: 10, val: 8, unit: 'cm' },
+                    { id: 'd2', label: 'Horizontal Diagonal (d₂)', min: 4, max: 10, val: 6, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const d1 = vals.d1;
+                    const d2 = vals.d2;
+                    const area = (d1 * d2) / 2;
+                    return {
+                        area: area,
+                        exampleText: `Given d₁ = ${d1} cm, d₂ = ${d2} cm<br>Area = (d₁ × d₂) ÷ 2<br>Area = (${d1} × ${d2}) ÷ 2 = ${d1*d2} ÷ 2 = <strong>${area} cm²</strong>`
+                    };
+                },
+                draw: (vals) => {
+                    const d1 = vals.d1;
+                    const d2 = vals.d2;
+                    const scale = 16;
+                    const h = d1 * scale;
+                    const w = d2 * scale;
+                    const cx = 120;
+                    const cy = 110;
+
+                    const pTop = `${cx},${cy - h*0.35}`;
+                    const pRight = `${cx + w/2},${cy}`;
+                    const pBottom = `${cx},${cy + h*0.65}`;
+                    const pLeft = `${cx - w/2},${cy}`;
+
+                    return `
+                        <polygon points="${pTop} ${pRight} ${pBottom} ${pLeft}" fill="#cff4fc" fill-opacity="0.7" stroke="#0891b2" stroke-width="3"/>
+                        <line x1="${cx - w/2}" y1="${cy}" x2="${cx + w/2}" y2="${cy}" stroke="#0e7490" stroke-width="2" stroke-dasharray="3,3"/>
+                        <line x1="${cx}" y1="${cy - h*0.35}" x2="${cx}" y2="${cy + h*0.65}" stroke="#0e7490" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="${cx}" y="${cy - 6}" text-anchor="middle" font-weight="bold" fill="#155e75" font-size="12">d₂ = ${d2} cm</text>
+                        <text x="${cx + 8}" y="${cy + h*0.2}" font-weight="bold" fill="#155e75" font-size="12">d₁ = ${d1} cm</text>
+                    `;
+                }
+            },
+            circle: {
+                title: "Circle Formulas",
+                formula: "Area = π × r² | Circumference = 2 × π × r",
+                formulaShort: "(A = πr², C = 2πr)",
+                explanation: "For a circle, <b>r</b> is the radius (distance from center to edge). We use <b>π (pi ≈ 3.14)</b>. Area is π × r², and circumference (perimeter) is 2 × π × r.",
+                sliders: [
+                    { id: 'radius', label: 'Radius (r)', min: 2, max: 7, val: 4, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const r = vals.radius;
+                    const area = (Math.PI * r * r).toFixed(1);
+                    const circum = (2 * Math.PI * r).toFixed(1);
+                    return {
+                        area: area,
+                        circumference: circum,
+                        exampleText: `Given radius (r) = ${r} cm (using π ≈ 3.14)<br>Area = π × r² = 3.14 × ${r} × ${r} = <strong>${area} cm²</strong><br>Circumference = 2 × π × r = 2 × 3.14 × ${r} = <strong>${circum} cm</strong>`
+                    };
+                },
+                draw: (vals) => {
+                    const r = vals.radius;
+                    const scale = 18;
+                    const radiusPx = r * scale;
+                    const cx = 120;
+                    const cy = 110;
+
+                    return `
+                        <circle cx="${cx}" cy="${cy}" r="${radiusPx}" fill="#fed7aa" fill-opacity="0.6" stroke="#c2410c" stroke-width="3"/>
+                        <line x1="${cx}" y1="${cy}" x2="${cx + radiusPx}" y2="${cy}" stroke="#9a3412" stroke-width="2.5"/>
+                        <circle cx="${cx}" cy="${cy}" r="4" fill="#9a3412"/>
+                        <text x="${cx + radiusPx/2}" y="${cy - 8}" text-anchor="middle" font-weight="bold" fill="#9a3412" font-size="13">r = ${r} cm</text>
+                    `;
+                }
+            }
+        };
+
+        let currentShapeKey = 'square';
+        let currentSliderValues = {};
+
+        function selectShape(key) {
+            playSound('click');
+            currentShapeKey = key;
+
+            document.querySelectorAll('.shape-tab-btn').forEach(btn => {
+                btn.className = 'shape-tab-btn bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm';
+            });
+            document.getElementById(`btn-shape-${key}`).className = 'shape-tab-btn bg-purple-600 text-white font-bold px-3.5 py-2 rounded-xl text-sm transition-all shadow-sm';
+
+            const data = shapesData[key];
+            document.getElementById('materi-title').innerText = data.title;
+            document.getElementById('materi-formula').innerText = data.formula;
+            document.getElementById('materi-formula-short').innerText = data.formulaShort;
+            document.getElementById('materi-explanation').innerHTML = data.explanation;
+            document.getElementById('shape-tag').innerText = `Shape: ${data.title.replace(' Formulas', '')}`;
+
+            const controlsContainer = document.getElementById('controls-container');
+            controlsContainer.innerHTML = '';
+            currentSliderValues = {};
+
+            data.sliders.forEach(s => {
+                currentSliderValues[s.id] = s.val;
+                const wrapper = document.createElement('div');
+                wrapper.className = "space-y-1";
+                wrapper.innerHTML = `
+                    <div class="flex justify-between text-xs font-bold text-slate-700">
+                        <span>${s.label}:</span>
+                        <span id="slider-val-${s.id}" class="text-purple-600">${s.val} ${s.unit}</span>
+                    </div>
+                    <input type="range" min="${s.min}" max="${s.max}" value="${s.val}" 
+                        oninput="updateShapeSlider('${s.id}', this.value)" 
+                        class="w-full accent-purple-600 cursor-pointer">
+                `;
+                controlsContainer.appendChild(wrapper);
+            });
+
+            renderShapeVisual();
+        }
+
+        function updateShapeSlider(sliderId, val) {
+            currentSliderValues[sliderId] = parseFloat(val);
+            document.getElementById(`slider-val-${sliderId}`).innerText = `${val} cm`;
+            renderShapeVisual();
+        }
+
+        function renderShapeVisual() {
+            const data = shapesData[currentShapeKey];
+            const svgContainer = document.getElementById('svg-container');
+            const innerSVG = data.draw(currentSliderValues);
+            svgContainer.innerHTML = `
+                <svg width="240" height="220" viewBox="0 0 240 220" class="drop-shadow-md">
+                    ${innerSVG}
+                </svg>
+            `;
+            const res = data.calc(currentSliderValues);
+            document.getElementById('materi-example').innerHTML = res.exampleText;
+        }
+
+        const quizData = [
+            {
+                id: 1,
+                shape: "Square",
+                question: "A square garden has a side length of <b>14 m</b>. What is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><rect x="30" y="10" width="80" height="80" fill="#93c5fd" fill-opacity="0.6" stroke="#2563eb" stroke-width="3" rx="4"/><text x="70" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e40af">s = 14 m</text></svg>`,
+                hint: "Area of a square = side × side (14 × 14)",
+                steps: [
+                    "Step 1: Identify side length = 14 m",
+                    "Step 2: Multiply side by itself (14 × 14 = 196)"
+                ],
+                options: ["28 m²", "56 m²", "196 m²", "180 m²"],
+                correct: 2,
+                unit: "m²"
+            },
+            {
+                id: 2,
+                shape: "Rectangle",
+                question: "A rectangular swimming pool is <b>18 m</b> long and <b>7 m</b> wide. What is its PERIMETER?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><rect x="15" y="25" width="110" height="50" fill="#a7f3d0" fill-opacity="0.6" stroke="#059669" stroke-width="3" rx="4"/><text x="70" y="55" text-anchor="middle" font-size="11" font-weight="bold" fill="#065f46">18m × 7m</text></svg>`,
+                hint: "Perimeter = 2 × (Length + Width) = 2 × (18 + 7)",
+                steps: [
+                    "Step 1: Add length and width (18 + 7 = 25)",
+                    "Step 2: Multiply the sum by 2 (25 × 2 = 50)"
+                ],
+                options: ["50 m", "126 m", "25 m", "100 m"],
+                correct: 0,
+                unit: "m"
+            },
+            {
+                id: 3,
+                shape: "Triangle",
+                question: "A triangular pennant has a base of <b>16 cm</b> and a height of <b>9 cm</b>. What is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><polygon points="10,90 130,90 70,15" fill="#fde68a" stroke="#d97706" stroke-width="3"/><line x1="70" y1="90" x2="70" y2="15" stroke="#dc2626" stroke-width="2" stroke-dasharray="2,2"/><text x="70" y="85" text-anchor="middle" font-size="10" font-weight="bold">b = 16</text><text x="75" y="55" font-size="10" font-weight="bold" fill="#dc2626">h = 9</text></svg>`,
+                hint: "Area of Triangle = (base × height) ÷ 2",
+                steps: [
+                    "Step 1: Multiply base × height (16 × 9 = 144)",
+                    "Step 2: Divide by 2 (144 ÷ 2 = 72)"
+                ],
+                options: ["144 cm²", "72 cm²", "25 cm²", "81 cm²"],
+                correct: 1,
+                unit: "cm²"
+            },
+            {
+                id: 4,
+                shape: "Parallelogram",
+                question: "A parallelogram sign has a base of <b>15 cm</b> and a height of <b>8 cm</b>. What is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><polygon points="25,25 125,25 100,75 0,75" fill="#e9d5ff" stroke="#7e22ce" stroke-width="3"/><line x1="25" y1="25" x2="25" y2="75" stroke="#dc2626" stroke-width="2" stroke-dasharray="2,2"/><text x="60" y="65" font-size="10" font-weight="bold">b = 15</text></svg>`,
+                hint: "Area of Parallelogram = base × height (15 × 8)",
+                steps: [
+                    "Step 1: Identify base = 15 cm, height = 8 cm",
+                    "Step 2: Multiply base × height (15 × 8 = 120)"
+                ],
+                options: ["120 cm²", "60 cm²", "23 cm²", "110 cm²"],
+                correct: 0,
+                unit: "cm²"
+            },
+            {
+                id: 5,
+                shape: "Trapezoid",
+                question: "A trapezoid tabletop has parallel bases of <b>10 cm</b> and <b>16 cm</b>, with a height of <b>6 cm</b>. What is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><polygon points="45,20 95,20 120,80 20,80" fill="#fecdd3" stroke="#e11d48" stroke-width="3"/><line x1="70" y1="20" x2="70" y2="80" stroke="#dc2626" stroke-width="2" stroke-dasharray="2,2"/><text x="70" y="55" text-anchor="middle" font-size="10" font-weight="bold" fill="#dc2626">h = 6</text></svg>`,
+                hint: "Area = ((a + b) ÷ 2) × height = ((10 + 16) ÷ 2) × 6",
+                steps: [
+                    "Step 1: Add bases (10 + 16 = 26)",
+                    "Step 2: Divide sum by 2 (26 ÷ 2 = 13)",
+                    "Step 3: Multiply by height (13 × 6 = 78)"
+                ],
+                options: ["156 cm²", "78 cm²", "52 cm²", "84 cm²"],
+                correct: 1,
+                unit: "cm²"
+            },
+            {
+                id: 6,
+                shape: "Rhombus",
+                question: "A rhombus tile has diagonals d₁ = 12 cm and d₂ = 10 cm. What is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><polygon points="70,10 120,50 70,90 20,50" fill="#ccfbf1" stroke="#0d9488" stroke-width="3"/><line x1="20" y1="50" x2="120" y2="50" stroke="#0f766e" stroke-dasharray="2,2"/><line x1="70" y1="10" x2="70" y2="90" stroke="#0f766e" stroke-dasharray="2,2"/></svg>`,
+                hint: "Area = (d₁ × d₂) ÷ 2 = (12 × 10) ÷ 2",
+                steps: [
+                    "Step 1: Multiply diagonals (12 × 10 = 120)",
+                    "Step 2: Divide by 2 (120 ÷ 2 = 60)"
+                ],
+                options: ["120 cm²", "60 cm²", "22 cm²", "30 cm²"],
+                correct: 1,
+                unit: "cm²"
+            },
+            {
+                id: 7,
+                shape: "Kite",
+                question: "A decorative kite has diagonals d₁ = 14 cm and d₂ = 8 cm. What is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><polygon points="70,15 115,50 70,85 25,50" fill="#cff4fc" stroke="#0891b2" stroke-width="3"/><line x1="25" y1="50" x2="115" y2="50" stroke="#0e7490" stroke-dasharray="2,2"/><line x1="70" y1="15" x2="70" y2="85" stroke="#0e7490" stroke-dasharray="2,2"/></svg>`,
+                hint: "Area = (d₁ × d₂) ÷ 2 = (14 × 8) ÷ 2",
+                steps: [
+                    "Step 1: Multiply diagonals (14 × 8 = 112)",
+                    "Step 2: Divide by 2 (112 ÷ 2 = 56)"
+                ],
+                options: ["112 cm²", "56 cm²", "44 cm²", "28 cm²"],
+                correct: 1,
+                unit: "cm²"
+            },
+            {
+                id: 8,
+                shape: "Circle",
+                question: "A circular garden pond has a radius of <b>5 m</b>. Using π ≈ 3.14, what is its AREA?",
+                shapeSVG: `<svg width="140" height="100" viewBox="0 0 140 100"><circle cx="70" cy="50" r="35" fill="#fed7aa" fill-opacity="0.6" stroke="#c2410c" stroke-width="3"/><line x1="70" y1="50" x2="105" y2="50" stroke="#9a3412" stroke-width="2.5"/><text x="87" y="44" font-size="10" font-weight="bold" fill="#9a3412">r=5</text></svg>`,
+                hint: "Area = π × r² = 3.14 × 5 × 5",
+                steps: [
+                    "Step 1: Square the radius (5 × 5 = 25)",
+                    "Step 2: Multiply by π (3.14 × 25 = 78.5)"
+                ],
+                options: ["31.4 m²", "78.5 m²", "15.7 m²", "157.0 m²"],
+                correct: 1,
+                unit: "m²"
+            }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            const q = quizData[currentQuizIndex];
+            const isAnswered = userAnswers[q.id] !== undefined;
+
+            let card = document.createElement('div');
+            card.className = "bg-emerald-50/50 p-5 md:p-6 rounded-2xl border-2 border-emerald-200";
+            
+            card.innerHTML = `
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="bg-white p-3 rounded-2xl border border-emerald-200 shadow-sm flex-shrink-0">
+                        ${q.shapeSVG}
+                    </div>
+                    <div class="flex-grow space-y-3 w-full">
+                        <div class="flex justify-between items-center">
+                            <span class="bg-emerald-200 text-emerald-800 font-bold px-3 py-1 rounded-full text-xs">
+                                Question ${currentQuizIndex + 1} of 8 • ${q.shape}
+                            </span>
+                            <span class="text-xs font-bold ${isAnswered ? (userAnswers[q.id] === q.correct ? 'text-emerald-600' : 'text-rose-500') : 'text-slate-400'}">
+                                ${isAnswered ? (userAnswers[q.id] === q.correct ? '✅ Correct (+10 ⭐)' : '❌ Incorrect') : 'Unanswered'}
+                            </span>
+                        </div>
+                        <p class="text-base md:text-lg font-bold text-slate-800">${q.question}</p>
+                        
+                        <!-- Hint collapsible -->
+                        <details class="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-xs text-amber-900">
+                            <summary class="font-bold cursor-pointer">💡 Need a hint or step guide?</summary>
+                            <div class="mt-2 space-y-1 text-slate-700 font-mono">
+                                <p><strong>Rule:</strong> ${q.hint}</p>
+                                ${q.steps.map(step => `<p>• ${step}</p>`).join('')}
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+                    ${q.options.map((opt, oIdx) => {
+                        let btnClass = "bg-white hover:bg-emerald-100 text-slate-700 font-bold p-3 rounded-xl border border-slate-200 text-left text-sm transition-all flex items-center justify-between";
+                        if (isAnswered) {
+                            if (oIdx === q.correct) btnClass = "bg-emerald-500 text-white font-bold p-3 rounded-xl border border-emerald-600 text-left text-sm flex items-center justify-between";
+                            else if (oIdx === userAnswers[q.id]) btnClass = "bg-rose-400 text-white font-bold p-3 rounded-xl border border-rose-500 text-left text-sm flex items-center justify-between";
+                            else btnClass = "bg-slate-100 text-slate-400 font-bold p-3 rounded-xl border border-slate-200 text-left text-sm flex items-center justify-between opacity-60";
+                        }
+                        return `
+                            <button onclick="checkQuizAnswer(${q.id}, ${oIdx})" id="quiz-btn-${q.id}-${oIdx}" class="${btnClass}" ${isAnswered ? 'disabled' : ''}>
+                                <span>${opt}</span>
+                                <span>${isAnswered && oIdx === q.correct ? '✨' : ''}</span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+
+                <!-- Feedback -->
+                <div id="quiz-feedback-${q.id}" class="mt-4 p-3.5 rounded-xl text-xs font-bold ${isAnswered ? (userAnswers[q.id] === q.correct ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-rose-100 text-rose-800 border border-rose-300') : 'hidden'}">
+                    ${isAnswered ? (userAnswers[q.id] === q.correct ? `🎉 <strong>Fantastic! That's correct.</strong>` : `❌ <strong>Not quite.</strong> The correct answer is <strong>${q.options[q.correct]}</strong>.`) : ''}
+                </div>
+            `;
+            container.appendChild(card);
+
+            document.getElementById('quiz-step-indicator').innerText = `Question ${currentQuizIndex + 1} of 8`;
+            document.getElementById('btn-prev-quiz').disabled = currentQuizIndex === 0;
+            document.getElementById('btn-next-quiz').innerText = currentQuizIndex === quizData.length - 1 ? 'Finish Quiz 🏆' : 'Next Question ➡️';
+            
+            // Calculate progress bar width
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('quiz-progress-bar').style.width = `${(answeredCount / quizData.length) * 100}%`;
+        }
+
+        function checkQuizAnswer(qId, selectedIdx) {
+            if (userAnswers[qId] !== undefined) return;
+            userAnswers[qId] = selectedIdx;
+
+            const q = quizData.find(item => item.id === qId);
+            const feedbackEl = document.getElementById(`quiz-feedback-${qId}`);
+            const buttons = document.querySelectorAll(`[id^="quiz-btn-${qId}-"]`);
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === q.correct) {
+                playSound('correct');
+                addStars(10);
+                quizScore += 10;
+                document.getElementById(`quiz-btn-${qId}-${selectedIdx}`).className = "bg-emerald-500 text-white font-bold p-3 rounded-xl border border-emerald-600 text-left text-sm flex items-center justify-between";
+                feedbackEl.className = "mt-4 p-3.5 rounded-xl text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                feedbackEl.innerHTML = `🎉 <strong>Fantastic! That's correct (+10 ⭐).</strong>`;
+            } else {
+                playSound('wrong');
+                document.getElementById(`quiz-btn-${qId}-${selectedIdx}`).className = "bg-rose-400 text-white font-bold p-3 rounded-xl border border-rose-500 text-left text-sm flex items-center justify-between";
+                document.getElementById(`quiz-btn-${qId}-${q.correct}`).className = "bg-emerald-500 text-white font-bold p-3 rounded-xl border border-emerald-600 text-left text-sm flex items-center justify-between";
+                feedbackEl.className = "mt-4 p-3.5 rounded-xl text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300";
+                feedbackEl.innerHTML = `❌ <strong>Not quite.</strong> The correct answer is <strong>${q.options[q.correct]}</strong>.`;
+            }
+            feedbackEl.classList.remove('hidden');
+            document.getElementById('quiz-score').innerText = `${quizScore} / 80`;
+            
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('quiz-progress-bar').style.width = `${(answeredCount / quizData.length) * 100}%`;
+
+            if (answeredCount === quizData.length) {
+                try {
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                } catch(e) {}
+            }
+        }
+
+        function navigateQuiz(direction) {
+            playSound('click');
+            const newIndex = currentQuizIndex + direction;
+            if (newIndex >= 0 && newIndex < quizData.length) {
+                currentQuizIndex = newIndex;
+                renderQuiz();
+            } else if (newIndex >= quizData.length) {
+                // Completed
+                switchTab('tujuan');
+                addStars(20);
+                alert("Congratulations! You have completed the Geometry Guided Practice! 20 bonus stars awarded!");
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderWarmup();
+            selectShape('square');
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
