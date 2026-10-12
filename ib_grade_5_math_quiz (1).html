@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Grade 5 Math: Perimeter & Area Interactive Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3, .font-fredoka {
+            font-family: 'Fredoka', cursive;
+        }
+        .shape-grid-bg {
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+        }
+        .bounce-btn:hover {
+            transform: translateY(-2px);
+            transition: all 0.15s ease;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-12 min-h-screen flex flex-col justify-between">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-4 border-indigo-400 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md transform -rotate-3">
+                    📐
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-extrabold text-indigo-800 leading-tight">IB Grade 5 Math Challenge</h1>
+                    <p class="text-xs text-slate-500 font-semibold hidden sm:block">Perimeter & Area • 30 Inquiry & Application Questions</p>
+                </div>
+            </div>
+
+            <!-- Stats Badge & Save Indicator -->
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold">
+                    <span>💾</span>
+                    <span>Auto-Saved</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-amber-100 border-2 border-amber-300 px-3 py-1 rounded-full shadow-inner">
+                    <span class="text-xl">⭐</span>
+                    <span id="header-stars" class="font-fredoka text-lg text-amber-800">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-4 flex-grow w-full">
+
+        <div class="bg-white rounded-2xl p-4 shadow-md border-2 border-indigo-100 mb-4 space-y-3">
+            <div class="flex items-center justify-between text-xs font-extrabold text-slate-600">
+                <span id="progress-text">Progress: 0 / 30 Questions Answered</span>
+                <span id="score-text" class="text-indigo-600">Score: 0 / 300</span>
+            </div>
+            
+            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden border border-slate-200">
+                <div id="progress-bar" class="bg-indigo-500 h-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <div class="pt-1 flex items-center justify-between">
+                <button onclick="toggleNavGrid()" id="btn-toggle-nav" class="bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-300 font-extrabold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all">
+                    <span id="nav-toggle-icon">🗺️</span>
+                    <span id="nav-toggle-label">Open Question Navigator (30)</span>
+                </button>
+
+                <button onclick="resetQuizConfirm()" class="text-xs font-bold text-slate-400 hover:text-red-500 transition-all flex items-center gap-1">
+                    <span>🔄</span> Reset Quiz
+                </button>
+            </div>
+
+            <!-- Collapsible Navigation Grid -->
+            <div id="nav-grid-container" class="hidden transition-all duration-300 pt-2 border-t border-slate-100">
+                <p class="text-[11px] font-bold text-slate-400 mb-2">Click any number to jump directly to that question:</p>
+                <div id="nav-grid" class="grid grid-cols-6 sm:grid-cols-10 gap-1.5">
+                    <!-- 30 Numbered Buttons injected dynamically -->
+                </div>
+                <div class="mt-2.5 flex items-center gap-4 text-[11px] font-bold text-slate-500 justify-center flex-wrap">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200 inline-block border"></span> Unanswered</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span> Correct</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span> Incorrect</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full ring-2 ring-indigo-500 bg-white inline-block"></span> Current</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="question-card" class="bg-white rounded-3xl p-5 md:p-7 border-4 border-indigo-200 shadow-xl space-y-5 relative">
+            
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <span id="question-number-badge" class="bg-indigo-600 text-white font-black px-3.5 py-1 rounded-full text-xs tracking-wide">
+                        QUESTION #1
+                    </span>
+                    <span id="question-type-badge" class="bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full text-xs">
+                        Square (Core Practice)
+                    </span>
+                </div>
+                <span id="question-status-tag" class="text-xs font-bold text-slate-400">
+                    Not answered yet
+                </span>
+            </div>
+
+            <!-- Question Layout: Left Text, Right SVG -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+                <div class="md:col-span-7 space-y-3">
+                    <h2 id="question-text" class="text-base md:text-lg font-bold text-slate-800 leading-relaxed">
+                        Loading question...
+                    </h2>
+                </div>
+
+                <div class="md:col-span-5 flex justify-center items-center bg-slate-50 shape-grid-bg p-4 rounded-2xl border-2 border-slate-200 min-h-[170px]" id="svg-wrapper">
+                    <!-- SVG diagram injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Essay Input Section with clear answer boxes (no placeholder hints) -->
+            <div class="bg-indigo-50/60 p-4 rounded-2xl border-2 border-indigo-100 space-y-4">
+                <p class="text-xs font-extrabold text-indigo-900 uppercase tracking-wide">✏️ IB Student Response Form (Perimeter & Area):</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Perimeter Input -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-700" for="input-perimeter">
+                            Perimeter (<span id="unit-label-p">cm</span>):
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input-perimeter" placeholder="" 
+                                class="w-full bg-white border-2 border-slate-300 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Area Input -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-700" for="input-area">
+                            Area (<span id="unit-label-a">cm²</span>):
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="input-area" placeholder="" 
+                                class="w-full bg-white border-2 border-slate-300 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 outline-none transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-1">
+                    <button onclick="submitEssayAnswer()" id="btn-submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all bounce-btn flex items-center gap-2">
+                        <span>✨ Submit Answer</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instant Feedback & Explanation Box -->
+            <div id="feedback-box" class="hidden p-4 rounded-2xl border-2 text-sm space-y-2 transition-all">
+                <div id="feedback-title" class="font-extrabold flex items-center gap-2"></div>
+                <div id="feedback-user-summary" class="text-xs font-bold text-slate-600 bg-white/70 p-2 rounded-lg"></div>
+                <div id="feedback-explanation" class="text-slate-700 font-semibold leading-relaxed text-xs md:text-sm"></div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                <button id="btn-prev" onclick="changeQuestion(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1">
+                    ⬅️ Previous
+                </button>
+
+                <span id="footer-step-count" class="text-xs font-bold text-slate-400">
+                    Question 1 of 30
+                </span>
+
+                <button id="btn-next" onclick="changeQuestion(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2 rounded-xl text-xs shadow-md transition-all bounce-btn flex items-center gap-1">
+                    Next ➡️
+                </button>
+            </div>
+
+        </div>
+
+        <div id="rekap-screen" class="hidden bg-white rounded-3xl p-6 md:p-8 border-4 border-indigo-300 shadow-2xl text-center space-y-6">
+            <div class="text-6xl animate-bounce">🏆</div>
+            <div>
+                <h2 class="text-3xl font-black text-indigo-700">Inquiry Complete!</h2>
+                <p class="text-slate-600 font-semibold mt-1">Outstanding effort! Here is your IB Math Grade 5 summary report:</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto">
+                <div class="bg-indigo-50 border-2 border-indigo-200 p-3 rounded-2xl">
+                    <span class="block text-2xl font-black text-indigo-600" id="rekap-score">0</span>
+                    <span class="text-xs font-bold text-slate-500">Total Score</span>
+                </div>
+                <div class="bg-amber-50 border-2 border-amber-200 p-3 rounded-2xl">
+                    <span class="block text-2xl font-black text-amber-600" id="rekap-stars">0</span>
+                    <span class="text-xs font-bold text-slate-500">Stars ⭐</span>
+                </div>
+                <div class="bg-green-50 border-2 border-green-200 p-3 rounded-2xl">
+                    <span class="block text-2xl font-black text-green-600" id="rekap-correct">0</span>
+                    <span class="text-xs font-bold text-slate-500">Correct ✅</span>
+                </div>
+                <div class="bg-red-50 border-2 border-red-200 p-3 rounded-2xl">
+                    <span class="block text-2xl font-black text-red-500" id="rekap-wrong">0</span>
+                    <span class="text-xs font-bold text-slate-500">Needs Review ❌</span>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 max-w-md mx-auto" id="rekap-message">
+                Amazing inquiry skills! You have mastered perimeter and area concepts for Grade 5 IB.
+            </div>
+
+            <div class="flex justify-center gap-3">
+                <button onclick="reviewQuiz()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold px-5 py-2.5 rounded-xl text-sm transition-all">
+                    🔍 Review Answers
+                </button>
+                <button onclick="resetQuizConfirm()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-2.5 rounded-xl text-sm shadow-lg bounce-btn transition-all">
+                    🔄 Restart Quiz
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 font-bold py-4 mt-8">
+        IB Grade 5 Mathematics Inquiry &bull; Perimeter & Area Interactive Assessment
+    </footer>
+
+    <script>
+        // Web Audio API sound generator
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(170, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+                }
+            } catch (e) {}
+        }
+
+        /* -------------------------------------------------------------------------
+           30 ESSAY QUESTIONS (Perimeter + Area per question, IB Grade 5 curriculum,
+           incorporating shapes: Square, Rectangle, Triangle, Parallelogram,
+           Trapezoid, Kite, Rhombus, Circle + 10 Real-world application tasks)
+           Note: Formula texts cleaned of raw $ symbols.
+        -------------------------------------------------------------------------- */
+        const questionsData = [
+            // --- CORE SHAPES (1 to 20) ---
+            {
+                id: 1,
+                shape: "Square",
+                category: "Core Practice",
+                text: "An art tile shaped like a square has a side length of <b>9 cm</b>. Calculate both its perimeter and its area.",
+                unit: "cm",
+                perimeterCorrect: 36,
+                areaCorrect: 81,
+                explanation: "<b>Perimeter:</b> 4 × 9 = 36 cm.<br><b>Area:</b> 9 × 9 = 81 cm².",
+                svg: `<svg width="130" height="110" viewBox="0 0 130 110"><rect x="25" y="15" width="80" height="80" fill="#c7d2fe" fill-opacity="0.6" stroke="#4f46e5" stroke-width="3" rx="4"/><text x="65" y="10" text-anchor="middle" font-size="12" font-weight="bold" fill="#3730a3">s = 9 cm</text><text x="14" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#3730a3" transform="rotate(-90 14 60)">s = 9 cm</text></svg>`
+            },
+            {
+                id: 2,
+                shape: "Rectangle",
+                category: "Core Practice",
+                text: "A classroom whiteboard has a length of <b>16 cm</b> and a width of <b>7 cm</b> on the scale drawing. Find its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 46,
+                areaCorrect: 112,
+                explanation: "<b>Perimeter:</b> 2 × (16 + 7) = 2 × 23 = 46 cm.<br><b>Area:</b> 16 × 7 = 112 cm².",
+                svg: `<svg width="150" height="100" viewBox="0 0 150 100"><rect x="15" y="25" width="120" height="50" fill="#a7f3d0" fill-opacity="0.6" stroke="#059669" stroke-width="3" rx="4"/><text x="75" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#065f46">length = 16 cm</text><text x="142" y="53" text-anchor="middle" font-size="11" font-weight="bold" fill="#065f46">width = 7 cm</text></svg>`
+            },
+            {
+                id: 3,
+                shape: "Triangle",
+                category: "Core Practice",
+                text: "A triangular pennant has a base of <b>12 cm</b>, a vertical height of <b>10 cm</b>, and two equal side lengths of <b>11 cm</b>. Find its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 34,
+                areaCorrect: 60,
+                explanation: "<b>Perimeter:</b> sum of all sides = 12 + 11 + 11 = 34 cm.<br><b>Area:</b> (base × height) ÷ 2 = (12 × 10) ÷ 2 = 60 cm².",
+                svg: `<svg width="140" height="110" viewBox="0 0 140 110"><polygon points="15,90 125,90 70,15" fill="#fde68a" fill-opacity="0.7" stroke="#d97706" stroke-width="3"/><line x1="70" y1="90" x2="70" y2="15" stroke="#dc2626" stroke-width="2" stroke-dasharray="3,3"/><text x="70" y="103" text-anchor="middle" font-size="11" font-weight="bold" fill="#b45309">base = 12 cm</text><text x="76" y="55" font-size="11" font-weight="bold" fill="#dc2626">h = 10 cm</text></svg>`
+            },
+            {
+                id: 4,
+                shape: "Parallelogram",
+                category: "Core Practice",
+                text: "A parallelogram-shaped tile has a base of <b>14 cm</b>, an adjacent side of <b>9 cm</b>, and a height of <b>8 cm</b>. Calculate its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 46,
+                areaCorrect: 112,
+                explanation: "<b>Perimeter:</b> 2 × (14 + 9) = 2 × 23 = 46 cm.<br><b>Area:</b> base × height = 14 × 8 = 112 cm².",
+                svg: `<svg width="150" height="100" viewBox="0 0 150 100"><polygon points="35,20 135,20 105,80 5,80" fill="#e9d5ff" fill-opacity="0.7" stroke="#7e22ce" stroke-width="3"/><line x1="35" y1="20" x2="35" y2="80" stroke="#dc2626" stroke-width="2" stroke-dasharray="3,3"/><text x="55" y="95" font-size="11" font-weight="bold" fill="#6b21a8">base = 14 cm</text><text x="40" y="55" font-size="11" font-weight="bold" fill="#dc2626">h = 8 cm</text></svg>`
+            },
+            {
+                id: 5,
+                shape: "Trapezoid",
+                category: "Core Practice",
+                text: "A trapezoid has parallel bases a = 10 cm, b = 16 cm, slant sides of <b>9 cm</b> each, and height h = 8 cm. Find its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 44,
+                areaCorrect: 104,
+                explanation: "<b>Perimeter:</b> 10 + 16 + 9 + 9 = 44 cm.<br><b>Area:</b> ((a + b) ÷ 2) × h = ((10 + 16) ÷ 2) × 8 = 13 × 8 = 104 cm².",
+                svg: `<svg width="150" height="100" viewBox="0 0 150 100"><polygon points="40,20 110,20 130,80 20,80" fill="#fed7aa" fill-opacity="0.7" stroke="#c2410c" stroke-width="3"/><text x="75" y="13" text-anchor="middle" font-size="11" font-weight="bold" fill="#9a3412">a = 10</text><text x="75" y="93" text-anchor="middle" font-size="11" font-weight="bold" fill="#9a3412">b = 16 cm</text></svg>`
+            },
+            {
+                id: 6,
+                shape: "Rhombus",
+                category: "Core Practice",
+                text: "A rhombus has a side length of <b>13 cm</b> and diagonals d1 = 10 cm and d2 = 24 cm. Find its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 52,
+                areaCorrect: 120,
+                explanation: "<b>Perimeter:</b> 4 × 13 = 52 cm.<br><b>Area:</b> (d1 × d2) ÷ 2 = (10 × 24) ÷ 2 = 120 cm².",
+                svg: `<svg width="140" height="110" viewBox="0 0 140 110"><polygon points="70,10 125,55 70,100 15,55" fill="#fecdd3" fill-opacity="0.7" stroke="#e11d48" stroke-width="3"/><text x="70" y="50" text-anchor="middle" font-size="10" font-weight="bold" fill="#9f1239">d₁ = 10</text><text x="75" y="80" font-size="10" font-weight="bold" fill="#9f1239">d₂ = 24</text></svg>`
+            },
+            {
+                id: 7,
+                shape: "Kite",
+                category: "Core Practice",
+                text: "A kite has pairs of sides measuring <b>10 cm</b> and <b>17 cm</b>. Its diagonals are d1 = 16 cm and d2 = 21 cm. Find its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 54,
+                areaCorrect: 168,
+                explanation: "<b>Perimeter:</b> 2 × (10 + 17) = 2 × 27 = 54 cm.<br><b>Area:</b> (16 × 21) ÷ 2 = 168 cm².",
+                svg: `<svg width="130" height="110" viewBox="0 0 130 110"><polygon points="65,10 115,40 65,100 15,40" fill="#cff4fc" fill-opacity="0.7" stroke="#0891b2" stroke-width="3"/><text x="65" y="35" text-anchor="middle" font-size="10" font-weight="bold" fill="#155e75">d₂ = 16</text><text x="70" y="70" font-size="10" font-weight="bold" fill="#155e75">d₁ = 21</text></svg>`
+            },
+            {
+                id: 8,
+                shape: "Circle",
+                category: "Core Practice",
+                text: "A circular garden pond has a radius r = 7 m. Calculate its circumference (perimeter) and area. (Use pi = 22/7)",
+                unit: "m",
+                perimeterCorrect: 44,
+                areaCorrect: 154,
+                explanation: "<b>Circumference:</b> 2 × (22/7) × 7 = 44 m.<br><b>Area:</b> (22/7) × 7² = 154 m².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="40" fill="#bae6fd" fill-opacity="0.6" stroke="#0284c7" stroke-width="3"/><line x1="55" y1="55" x2="95" y2="55" stroke="#0369a1" stroke-width="2"/><text x="75" y="48" text-anchor="middle" font-size="11" font-weight="bold" fill="#0369a1">r = 7m</text></svg>`
+            },
+            {
+                id: 9,
+                shape: "Square",
+                category: "Core Practice",
+                text: "A square bulletin board has a perimeter of <b>48 cm</b>. Calculate its side length and its area.",
+                unit: "cm",
+                perimeterCorrect: 48,
+                areaCorrect: 144,
+                explanation: "<b>Side length:</b> 48 ÷ 4 = 12 cm.<br><b>Area:</b> 12 × 12 = 144 cm².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><rect x="15" y="15" width="80" height="80" fill="#c7d2fe" stroke="#4f46e5" stroke-width="3" rx="4"/><text x="55" y="60" text-anchor="middle" font-size="11" font-weight="bold" fill="#3730a3">P = 48 cm</text></svg>`
+            },
+            {
+                id: 10,
+                shape: "Rectangle",
+                category: "Core Practice",
+                text: "A rectangular banner has an area of <b>130 cm²</b> and a length of <b>13 cm</b>. Find its width and its perimeter.",
+                unit: "cm",
+                perimeterCorrect: 46,
+                areaCorrect: 130,
+                explanation: "<b>Width:</b> 130 ÷ 13 = 10 cm.<br><b>Perimeter:</b> 2 × (13 + 10) = 46 cm.",
+                svg: `<svg width="140" height="90" viewBox="0 0 140 90"><rect x="10" y="15" width="120" height="60" fill="#a7f3d0" stroke="#059669" stroke-width="3" rx="4"/><text x="70" y="48" text-anchor="middle" font-size="11" font-weight="bold" fill="#065f46">Area = 130, l = 13</text></svg>`
+            },
+            {
+                id: 11,
+                shape: "Triangle",
+                category: "Core Practice",
+                text: "A right triangle has a base of <b>15 cm</b> and a perpendicular height of <b>8 cm</b>. Its hypotenuse is <b>17 cm</b>. Find its perimeter and area.",
+                unit: "cm",
+                perimeterCorrect: 40,
+                areaCorrect: 60,
+                explanation: "<b>Perimeter:</b> 15 + 8 + 17 = 40 cm.<br><b>Area:</b> (15 × 8) ÷ 2 = 60 cm².",
+                svg: `<svg width="130" height="100" viewBox="0 0 130 100"><polygon points="20,85 110,85 20,15" fill="#fde68a" stroke="#d97706" stroke-width="3"/><text x="65" y="97" text-anchor="middle" font-size="11" font-weight="bold">base = 15</text><text x="12" y="55" font-size="11" font-weight="bold" fill="#dc2626" transform="rotate(-90 12 55)">h = 8</text></svg>`
+            },
+            {
+                id: 12,
+                shape: "Circle",
+                category: "Core Practice",
+                text: "A circular pizza has a diameter d = 28 cm (radius 14 cm). Calculate its circumference and area. (Use pi = 22/7)",
+                unit: "cm",
+                perimeterCorrect: 88,
+                areaCorrect: 616,
+                explanation: "<b>Circumference:</b> (22/7) × 28 = 88 cm.<br><b>Area:</b> (22/7) × 14² = 616 cm².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="40" fill="#bae6fd" stroke="#0284c7" stroke-width="3"/><line x1="15" y1="55" x2="95" y2="55" stroke="#0369a1" stroke-width="2"/><text x="55" y="48" text-anchor="middle" font-size="11" font-weight="bold">d = 28 cm</text></svg>`
+            },
+            {
+                id: 13,
+                shape: "Parallelogram",
+                category: "Core Practice",
+                text: "A parallelogram has an area of <b>150 cm²</b> and a base of <b>15 cm</b>. What is its height? (Assume perimeter is not required here, enter 0 for perimeter and 150 for area)",
+                unit: "cm",
+                perimeterCorrect: 0,
+                areaCorrect: 150,
+                explanation: "<b>Height:</b> 150 ÷ 15 = 10 cm. (Perimeter is unspecified as side lengths weren't given, so 0 for perimeter).",
+                svg: `<svg width="140" height="90" viewBox="0 0 140 90"><polygon points="30,20 130,20 100,75 0,75" fill="#e9d5ff" stroke="#7e22ce" stroke-width="3"/><text x="65" y="48" text-anchor="middle" font-size="11" font-weight="bold">Area = 150, base = 15</text></svg>`
+            },
+            {
+                id: 14,
+                shape: "Trapezoid",
+                category: "Core Practice",
+                text: "A trapezoid has bases a = 12 cm, b = 18 cm, and height h = 10 cm. (Slant sides unknown, so enter 0 for perimeter). Calculate its area.",
+                unit: "cm",
+                perimeterCorrect: 0,
+                areaCorrect: 150,
+                explanation: "<b>Area:</b> ((12 + 18) ÷ 2) × 10 = 15 × 10 = 150 cm².",
+                svg: `<svg width="150" height="90" viewBox="0 0 150 90"><polygon points="35,20 115,20 130,75 20,75" fill="#fed7aa" stroke="#c2410c" stroke-width="3"/><text x="75" y="48" text-anchor="middle" font-size="11" font-weight="bold">h = 10 cm</text></svg>`
+            },
+            {
+                id: 15,
+                shape: "Rhombus",
+                category: "Core Practice",
+                text: "A rhombus has diagonals d1 = 14 cm and d2 = 20 cm. (Side length unknown, enter 0 for perimeter). Calculate its area.",
+                unit: "cm",
+                perimeterCorrect: 0,
+                areaCorrect: 140,
+                explanation: "<b>Area:</b> (14 × 20) ÷ 2 = 140 cm².",
+                svg: `<svg width="130" height="110" viewBox="0 0 130 110"><polygon points="65,10 115,55 65,100 15,55" fill="#fecdd3" stroke="#e11d48" stroke-width="3"/><text x="65" y="60" text-anchor="middle" font-size="10" font-weight="bold">d₁=14, d₂=20</text></svg>`
+            },
+            {
+                id: 16,
+                shape: "Square",
+                category: "Core Practice",
+                text: "A square park has an area of <b>225 m²</b>. Find its side length and its perimeter.",
+                unit: "m",
+                perimeterCorrect: 60,
+                areaCorrect: 225,
+                explanation: "<b>Side length:</b> square root of 225 = 15 m.<br><b>Perimeter:</b> 4 × 15 = 60 m.",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><rect x="15" y="15" width="80" height="80" fill="#c7d2fe" stroke="#4f46e5" stroke-width="3" rx="4"/><text x="55" y="60" text-anchor="middle" font-size="11" font-weight="bold">Area = 225</text></svg>`
+            },
+            {
+                id: 17,
+                shape: "Rectangle",
+                category: "Core Practice",
+                text: "A rectangular swimming pool has a perimeter of <b>50 m</b> and a length of <b>15 m</b>. Find its width and its area.",
+                unit: "m",
+                perimeterCorrect: 50,
+                areaCorrect: 150,
+                explanation: "<b>Width:</b> (50 ÷ 2) - 15 = 25 - 15 = 10 m.<br><b>Area:</b> 15 × 10 = 150 m².",
+                svg: `<svg width="140" height="90" viewBox="0 0 140 90"><rect x="10" y="15" width="120" height="60" fill="#a7f3d0" stroke="#059669" stroke-width="3" rx="4"/><text x="70" y="48" text-anchor="middle" font-size="11" font-weight="bold">P = 50, l = 15</text></svg>`
+            },
+            {
+                id: 18,
+                shape: "Triangle",
+                category: "Core Practice",
+                text: "A triangle has an area of <b>84 cm²</b> and a base of <b>14 cm</b>. What is its height? (Enter 0 for perimeter and 84 for area).",
+                unit: "cm",
+                perimeterCorrect: 0,
+                areaCorrect: 84,
+                explanation: "<b>Height:</b> (84 × 2) ÷ 14 = 168 ÷ 14 = 12 cm.",
+                svg: `<svg width="130" height="100" viewBox="0 0 130 100"><polygon points="15,85 115,85 65,15" fill="#fde68a" stroke="#d97706" stroke-width="3"/><text x="65" y="60" text-anchor="middle" font-size="10" font-weight="bold">Area = 84</text></svg>`
+            },
+            {
+                id: 19,
+                shape: "Circle",
+                category: "Core Practice",
+                text: "A circular tabletop has a radius r = 10 cm. Calculate its circumference and area using pi = 3.14. (Round to whole numbers if necessary: Perimeter = 63, Area = 314)",
+                unit: "cm",
+                perimeterCorrect: 63,
+                areaCorrect: 314,
+                explanation: "<b>Circumference:</b> 2 × 3.14 × 10 = 62.8 ≈ 63 cm.<br><b>Area:</b> 3.14 × 10² = 314 cm².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="40" fill="#bae6fd" stroke="#0284c7" stroke-width="3"/><text x="55" y="58" text-anchor="middle" font-size="10" font-weight="bold">r = 10 cm</text></svg>`
+            },
+            {
+                id: 20,
+                shape: "Kite",
+                category: "Core Practice",
+                text: "A kite has diagonals d1 = 18 cm and d2 = 15 cm. (Enter 0 for perimeter). Calculate its area.",
+                unit: "cm",
+                perimeterCorrect: 0,
+                areaCorrect: 135,
+                explanation: "<b>Area:</b> (18 × 15) ÷ 2 = 270 ÷ 2 = 135 cm².",
+                svg: `<svg width="130" height="110" viewBox="0 0 130 110"><polygon points="65,10 115,40 65,100 15,40" fill="#cff4fc" stroke="#0891b2" stroke-width="3"/><text x="65" y="60" text-anchor="middle" font-size="10" font-weight="bold">d₁=18, d₂=15</text></svg>`
+            },
+
+            // --- REAL-WORLD IB APPLICATION TASKS (21 to 30) ---
+            {
+                id: 21,
+                shape: "Rectangle",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> Maya is designing a rectangular community garden measuring <b>25 m</b> long and <b>14 m</b> wide. She needs to fence the perimeter and cover the entire ground with soil (area). Calculate the fencing length (perimeter) and soil quantity (area).",
+                unit: "m",
+                perimeterCorrect: 78,
+                areaCorrect: 350,
+                explanation: "<b>Perimeter (Fencing):</b> 2 × (25 + 14) = 2 × 39 = 78 m.<br><b>Area (Soil):</b> 25 × 14 = 350 m².",
+                svg: `<svg width="140" height="90" viewBox="0 0 140 90"><rect x="10" y="15" width="120" height="60" fill="#a7f3d0" stroke="#059669" stroke-width="3" rx="4"/><text x="70" y="48" text-anchor="middle" font-size="11" font-weight="bold">25m × 14m Garden</text></svg>`
+            },
+            {
+                id: 22,
+                shape: "Square",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> An IB exhibition poster is square-shaped with a side length of <b>50 cm</b>. What is the total length of decorative border ribbon needed (perimeter) and the total poster laminate surface required (area)?",
+                unit: "cm",
+                perimeterCorrect: 200,
+                areaCorrect: 2500,
+                explanation: "<b>Perimeter:</b> 4 × 50 = 200 cm.<br><b>Area:</b> 50 × 50 = 2500 cm².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><rect x="15" y="15" width="80" height="80" fill="#c7d2fe" stroke="#4f46e5" stroke-width="3" rx="4"/><text x="55" y="60" text-anchor="middle" font-size="11" font-weight="bold">s = 50 cm</text></svg>`
+            },
+            {
+                id: 23,
+                shape: "Triangle",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A triangular roof gable has a base of <b>8 m</b>, a height of <b>6 m</b>, and sloping wooden edges of <b>7 m</b> each. Calculate the total outer wooden trim length (perimeter) and paint coverage surface (area).",
+                unit: "m",
+                perimeterCorrect: 22,
+                areaCorrect: 24,
+                explanation: "<b>Perimeter:</b> 8 + 7 + 7 = 22 m.<br><b>Area:</b> (8 × 6) ÷ 2 = 24 m².",
+                svg: `<svg width="130" height="100" viewBox="0 0 130 100"><polygon points="15,85 115,85 65,15" fill="#fde68a" stroke="#d97706" stroke-width="3"/><text x="65" y="60" text-anchor="middle" font-size="10" font-weight="bold">Base 8m, h 6m</text></svg>`
+            },
+            {
+                id: 24,
+                shape: "Circle",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A circular running track in a school has a radius of <b>21 m</b>. If students run around it once, how far do they run (circumference)? What is the grass field area inside? (Use pi = 22/7)",
+                unit: "m",
+                perimeterCorrect: 132,
+                areaCorrect: 1386,
+                explanation: "<b>Circumference:</b> 2 × (22/7) × 21 = 132 m.<br><b>Area:</b> (22/7) × 21² = 1386 m².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="40" fill="#bae6fd" stroke="#0284c7" stroke-width="3"/><text x="55" y="58" text-anchor="middle" font-size="10" font-weight="bold">r = 21m</text></svg>`
+            },
+            {
+                id: 25,
+                shape: "Parallelogram",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A modern park plaza is shaped like a parallelogram with base <b>30 m</b>, side <b>18 m</b>, and height <b>15 m</b>. Calculate the boundary railing length (perimeter) and paving tile surface (area).",
+                unit: "m",
+                perimeterCorrect: 96,
+                areaCorrect: 450,
+                explanation: "<b>Perimeter:</b> 2 × (30 + 18) = 96 m.<br><b>Area:</b> 30 × 15 = 450 m².",
+                svg: `<svg width="140" height="90" viewBox="0 0 140 90"><polygon points="30,20 130,20 100,75 0,75" fill="#e9d5ff" stroke="#7e22ce" stroke-width="3"/><text x="65" y="48" text-anchor="middle" font-size="10" font-weight="bold">Base 30, h 15</text></svg>`
+            },
+            {
+                id: 26,
+                shape: "Trapezoid",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A community skate park section is shaped like a trapezoid with parallel edges of <b>12 m</b> and <b>20 m</b>, slant edges of <b>10 m</b> each, and a height of <b>8 m</b>. Find its safety barrier perimeter and floor area.",
+                unit: "m",
+                perimeterCorrect: 52,
+                areaCorrect: 128,
+                explanation: "<b>Perimeter:</b> 12 + 20 + 10 + 10 = 52 m.<br><b>Area:</b> ((12 + 20) ÷ 2) × 8 = 16 × 8 = 128 m².",
+                svg: `<svg width="150" height="90" viewBox="0 0 150 90"><polygon points="35,20 115,20 130,75 20,75" fill="#fed7aa" stroke="#c2410c" stroke-width="3"/><text x="75" y="48" text-anchor="middle" font-size="10" font-weight="bold">12m & 20m Bases</text></svg>`
+            },
+            {
+                id: 27,
+                shape: "Rhombus",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A custom decorative window glass panel is shaped like a rhombus with side length <b>25 cm</b> and diagonals d1 = 30 cm, d2 = 40 cm. Find the metal frame perimeter and glass surface area.",
+                unit: "cm",
+                perimeterCorrect: 100,
+                areaCorrect: 600,
+                explanation: "<b>Perimeter:</b> 4 × 25 = 100 cm.<br><b>Area:</b> (30 × 40) ÷ 2 = 600 cm².",
+                svg: `<svg width="130" height="110" viewBox="0 0 130 110"><polygon points="65,10 115,55 65,100 15,55" fill="#fecdd3" stroke="#e11d48" stroke-width="3"/><text x="65" y="60" text-anchor="middle" font-size="10" font-weight="bold">s=25, d₁=30, d₂=40</text></svg>`
+            },
+            {
+                id: 28,
+                shape: "Rectangle",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A school gymnasium floor is <b>40 m</b> long and <b>25 m</b> wide. What is the total boundary length for marking tape (perimeter) and total wood varnishing area?",
+                unit: "m",
+                perimeterCorrect: 130,
+                areaCorrect: 1000,
+                explanation: "<b>Perimeter:</b> 2 × (40 + 25) = 2 × 65 = 130 m.<br><b>Area:</b> 40 × 25 = 1000 m².",
+                svg: `<svg width="140" height="90" viewBox="0 0 140 90"><rect x="10" y="15" width="120" height="60" fill="#a7f3d0" stroke="#059669" stroke-width="3" rx="4"/><text x="70" y="48" text-anchor="middle" font-size="11" font-weight="bold">Gym 40m × 25m</text></svg>`
+            },
+            {
+                id: 29,
+                shape: "Square",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A square courtyard has a perimeter of <b>120 m</b>. Calculate the courtyard side length and its total cobblestone paving area.",
+                unit: "m",
+                perimeterCorrect: 120,
+                areaCorrect: 900,
+                explanation: "<b>Side length:</b> 120 ÷ 4 = 30 m.<br><b>Area:</b> 30 × 30 = 900 m².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><rect x="15" y="15" width="80" height="80" fill="#c7d2fe" stroke="#4f46e5" stroke-width="3" rx="4"/><text x="55" y="60" text-anchor="middle" font-size="11" font-weight="bold">P = 120m</text></svg>`
+            },
+            {
+                id: 30,
+                shape: "Circle",
+                category: "IB Application",
+                text: "<b>Real-World Inquiry:</b> A circular fountain basin has a diameter of <b>14 m</b> (radius 7 m). Calculate the stone edge perimeter (circumference) and water surface area. (Use pi = 22/7)",
+                unit: "m",
+                perimeterCorrect: 44,
+                areaCorrect: 154,
+                explanation: "<b>Perimeter (Circumference):</b> (22/7) × 14 = 44 m.<br><b>Area:</b> (22/7) × 7² = 154 m².",
+                svg: `<svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="40" fill="#bae6fd" stroke="#0284c7" stroke-width="3"/><text x="55" y="58" text-anchor="middle" font-size="10" font-weight="bold">d = 14m</text></svg>`
+            }
+        ];
+
+        /* -------------------------------------------------------------------------
+           APPLICATION STATE & PERSISTENCE
+        -------------------------------------------------------------------------- */
+        const STORAGE_KEY = 'ib_grade5_math_quiz_state_v2';
+        
+        let state = {
+            currentIndex: 0,
+            userResponses: new Array(30).fill(null), // Array of { p: '', a: '' }
+            score: 0,
+            stars: 0
+        };
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch(e){}
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.userResponses && parsed.userResponses.length === 30) {
+                        state = parsed;
+                    }
+                }
+            } catch(e){}
+        }
+
+        /* -------------------------------------------------------------------------
+           UI RENDERING & INTERACTION
+        -------------------------------------------------------------------------- */
+        function initQuiz() {
+            loadState();
+            renderNavGrid();
+            renderQuestion(state.currentIndex);
+            updateHeaderAndProgress();
+        }
+
+        function toggleNavGrid() {
+            playSound('click');
+            const container = document.getElementById('nav-grid-container');
+            const label = document.getElementById('nav-toggle-label');
+            const icon = document.getElementById('nav-toggle-icon');
+            
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                label.innerText = 'Hide Question Navigator';
+                icon.innerText = '❌';
+            } else {
+                container.classList.add('hidden');
+                label.innerText = 'Open Question Navigator (30)';
+                icon.innerText = '🗺️';
+            }
+        }
+
+        function renderNavGrid() {
+            const grid = document.getElementById('nav-grid');
+            grid.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => jumpToQuestion(idx);
+
+                const resp = state.userResponses[idx];
+                let bgClass = "bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300";
+
+                if (resp !== null) {
+                    if (resp.isCorrect) {
+                        bgClass = "bg-green-500 text-white font-black border-green-600";
+                    } else {
+                        bgClass = "bg-red-500 text-white font-black border-red-600";
+                    }
+                }
+
+                const activeRing = (idx === state.currentIndex) ? "ring-2 ring-indigo-500 font-extrabold" : "";
+
+                btn.className = `w-full h-8 rounded-lg text-xs flex items-center justify-center transition-all border ${bgClass} ${activeRing}`;
+                btn.innerText = idx + 1;
+                grid.appendChild(btn);
+            });
+        }
+
+        function renderQuestion(index) {
+            const q = questionsData[index];
+            state.currentIndex = index;
+            saveState();
+
+            // Header info
+            document.getElementById('question-number-badge').innerText = `QUESTION #${index + 1}`;
+            document.getElementById('question-type-badge').innerText = `${q.shape} (${q.category})`;
+            document.getElementById('question-text').innerHTML = q.text;
+            document.getElementById('svg-wrapper').innerHTML = q.svg;
+            document.getElementById('footer-step-count').innerText = `Question ${index + 1} of 30`;
+
+            // Units
+            document.getElementById('unit-label-p').innerText = q.unit;
+            document.getElementById('unit-label-a').innerText = q.unit + '²';
+
+            // Navigation buttons
+            document.getElementById('btn-prev').disabled = (index === 0);
+            
+            const btnNext = document.getElementById('btn-next');
+            if (index === questionsData.length - 1) {
+                btnNext.innerText = 'Finish & View Summary 🏆';
+            } else {
+                btnNext.innerText = 'Next ➡️';
+            }
+
+            // Input fields & Status
+            const inputP = document.getElementById('input-perimeter');
+            const inputA = document.getElementById('input-area');
+            const submitBtn = document.getElementById('btn-submit');
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackUserSummary = document.getElementById('feedback-user-summary');
+            const feedbackExp = document.getElementById('feedback-explanation');
+            const statusTag = document.getElementById('question-status-tag');
+
+            const resp = state.userResponses[index];
+
+            if (resp !== null) {
+                inputP.value = resp.userP;
+                inputA.value = resp.userA;
+                inputP.disabled = true;
+                inputA.disabled = true;
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                feedbackBox.classList.remove('hidden');
+                feedbackExp.innerHTML = q.explanation;
+                feedbackUserSummary.innerHTML = `Your submission → Perimeter: <b>${resp.userP || 0} ${q.unit}</b> | Area: <b>${resp.userA || 0} ${q.unit}²</b>`;
+
+                if (resp.isCorrect) {
+                    feedbackBox.className = "p-4 rounded-2xl border-2 text-sm space-y-2 bg-green-50 border-green-300 text-green-900";
+                    feedbackTitle.innerHTML = "🎉 <b>Fantastic! Both Perimeter & Area are Correct! (+10 Stars ⭐)</b>";
+                    statusTag.innerHTML = "✅ Correct";
+                    statusTag.className = "text-xs font-bold text-green-600";
+                } else {
+                    feedbackBox.className = "p-4 rounded-2xl border-2 text-sm space-y-2 bg-red-50 border-red-300 text-red-900";
+                    feedbackTitle.innerHTML = "❌ <b>Not Quite Right. Check the Explanations Below!</b>";
+                    statusTag.innerHTML = "❌ Incorrect";
+                    statusTag.className = "text-xs font-bold text-red-500";
+                }
+            } else {
+                inputP.value = '';
+                inputA.value = '';
+                inputP.disabled = false;
+                inputA.disabled = false;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                feedbackBox.classList.add('hidden');
+                statusTag.innerHTML = "Not answered yet";
+                statusTag.className = "text-xs font-bold text-slate-400";
+            }
+
+            renderNavGrid();
+        }
+
+        function submitEssayAnswer() {
+            const index = state.currentIndex;
+            const q = questionsData[index];
+
+            const valP = document.getElementById('input-perimeter').value.trim();
+            const valA = document.getElementById('input-area').value.trim();
+
+            if (valP === "" || valA === "") {
+                alert("Please fill in both Perimeter and Area values before submitting.");
+                return;
+            }
+
+            const numP = parseFloat(valP);
+            const numA = parseFloat(valA);
+
+            // Allow small decimal tolerance (e.g. within 0.5)
+            const isPCorrect = Math.abs(numP - q.perimeterCorrect) <= 0.5;
+            const isACorrect = Math.abs(numA - q.areaCorrect) <= 0.5;
+            const isCorrect = isPCorrect && isACorrect;
+
+            state.userResponses[index] = {
+                userP: valP,
+                userA: valA,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                playSound('correct');
+                state.stars += 10;
+                state.score += 10;
+                confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
+            } else {
+                playSound('wrong');
+            }
+
+            saveState();
+            updateHeaderAndProgress();
+            renderQuestion(index);
+        }
+
+        function changeQuestion(delta) {
+            playSound('click');
+            const newIndex = state.currentIndex + delta;
+            
+            if (newIndex >= 0 && newIndex < questionsData.length) {
+                renderQuestion(newIndex);
+            } else if (newIndex >= questionsData.length) {
+                showRekapScreen();
+            }
+        }
+
+        function jumpToQuestion(index) {
+            playSound('click');
+            renderQuestion(index);
+        }
+
+        function updateHeaderAndProgress() {
+            const answeredCount = state.userResponses.filter(r => r !== null).length;
+            
+            let calculatedScore = 0;
+            state.userResponses.forEach((resp, i) => {
+                if (resp !== null && resp.isCorrect) {
+                    calculatedScore += 10;
+                }
+            });
+            state.score = calculatedScore;
+            state.stars = calculatedScore;
+
+            document.getElementById('header-stars').innerText = state.stars;
+            document.getElementById('progress-text').innerText = `Progress: ${answeredCount} / 30 Questions Answered`;
+            document.getElementById('score-text').innerText = `Score: ${state.score} / 300`;
+            
+            const percent = (answeredCount / 30) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        function showRekapScreen() {
+            playSound('correct');
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('rekap-screen').classList.remove('hidden');
+
+            const correctCount = state.userResponses.filter((resp) => resp !== null && resp.isCorrect).length;
+            const wrongCount = state.userResponses.filter((resp) => resp !== null && !resp.isCorrect).length;
+
+            document.getElementById('rekap-score').innerText = state.score;
+            document.getElementById('rekap-stars').innerText = state.stars;
+            document.getElementById('rekap-correct').innerText = correctCount;
+            document.getElementById('rekap-wrong').innerText = wrongCount;
+
+            const msgEl = document.getElementById('rekap-message');
+            if (correctCount >= 25) {
+                msgEl.innerText = "🌟 Stellar inquiry! You are an IB Grade 5 Mathematics Master of Perimeter & Area!";
+            } else if (correctCount >= 18) {
+                msgEl.innerText = "👍 Great critical thinking! You understand most geometric formulas well.";
+            } else {
+                msgEl.innerText = "💪 Keep inquiring! Review the step-by-step explanations and try again to improve your skills.";
+            }
+
+            confetti({ particleCount: 120, spread: 90, origin: { y: 0.5 } });
+        }
+
+        function reviewQuiz() {
+            playSound('click');
+            document.getElementById('rekap-screen').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('hidden');
+            renderQuestion(0);
+        }
+
+        function resetQuizConfirm() {
+            playSound('click');
+            if (confirm("Are you sure you want to reset the quiz? All your answers will be cleared.")) {
+                state = {
+                    currentIndex: 0,
+                    userResponses: new Array(30).fill(null),
+                    score: 0,
+                    stars: 0
+                };
+                saveState();
+                document.getElementById('rekap-screen').classList.add('hidden');
+                document.getElementById('question-card').classList.remove('hidden');
+                initQuiz();
+            }
+        }
+
+        window.onload = function() {
+            initQuiz();
+        };
+    </script>
+</body>
+</html>
